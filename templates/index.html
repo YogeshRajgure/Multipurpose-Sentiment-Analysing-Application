@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Search Page</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Search</h1>
+
+    <div class="form" style="align: center">
+        <form action="/review" method="POST">
+            <center>
+            UserId : <input type="text" name="UserId_r" placeholder="UserId" id="UserId_r" >
+            ProjectId : <input type="text" name="ProjectId_r" placeholder="ProjectId" id="ProjectId_r">
+            <br>
+            <input type="text" name="content" id="content" placeholder="Product Name"><br>
+            <input type="number" name="num" id="num" placeholder="Number of comments"><br>
+            <input type="checkbox"  value="multi_products" name="multi_products" id="multi_products">
+            <label for="multi_products" >select from different products</label><br>
+            <input type="submit" value="    Fetch & store    "> <!-- submit -->
+            </center>
+        </form>
+    </div>
+</div>
+{% endblock %}

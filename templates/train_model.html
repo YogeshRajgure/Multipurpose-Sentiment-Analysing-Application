@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train New Model</title>
+</head>
+
+
+<body>
+
+<h1>Upload the Data  (or) Fetch data from Flipkart </h1>
+
+<div align="center">
+
+<div class="left" align="left">
+
+    <form action="upload.php, " method="post" enctype="multipart/form-data">
+
+        UserId : <input type="text" name="UserId" placeholder="UserId" id="UserId_l" >
+        ProjectId : <input type="text" name="ProjectId" placeholder="ProjectId" id="ProjectId_l">
+
+        <br>
+      Select file to upload:
+        <br>
+
+      <input type="file" name="fileToUpload" id="fileToUpload">
+        <br>
+      <input type="submit" value="Upload" name="submit">
+
+
+    </form>
+</div>
+
+<div class="right" align="right">
+    <form action="/review" method="POST">
+
+        UserId : <input type="text" name="UserId_r" placeholder="UserId" id="UserId_r" >
+        ProjectId : <input type="text" name="ProjectId_r" placeholder="ProjectId" id="ProjectId_r">
+        <br>
+        <input type="text" name="content" id="content" placeholder="Product Name"><br>
+        <input type="number" name="num" id="num" placeholder="Number of comments"><br>
+        <input type="checkbox"  value="multi_products" name="multi_products" id="multi_products">
+        <label for="multi_products" >select from different products</label><br>
+        <br>
+        <input type="submit" value="Fetch" name="submit">
+    </form>
+</div>
+
+</div>
+</body>
+</html>
+
+<!--
+<button type="submit" name="submit" value="Upload"> Upload the Data File </button>
+    <a href="fetch_n_store.html">
+        <button name="go" > Fetch from web </button>
+    </a>
+-->
