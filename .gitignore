@@ -128,7 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*.idea/
 .ipynb_checkpoints/
 .vscode/
+app2.py
 .idea
+.idea/
+*.idea/
+chromedriver_win32.zip
+ML_prediction.ipynb
