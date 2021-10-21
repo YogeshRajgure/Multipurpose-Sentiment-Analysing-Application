@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+
+{% block head %}
+
     <meta charset="UTF-8">
     <title>Train New Model</title>
-</head>
 
+{% endblock %}
 
-<body>
+{% block body %}
 
 <h1>Upload the Data  (or) Fetch data from Flipkart </h1>
 
@@ -47,8 +48,8 @@
 </div>
 
 </div>
-</body>
-</html>
+
+{% endblock %}
 
 <!--
 <button type="submit" name="submit" value="Upload"> Upload the Data File </button>

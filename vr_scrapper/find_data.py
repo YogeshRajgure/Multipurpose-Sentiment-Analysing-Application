@@ -8,7 +8,6 @@ from selenium.common.exceptions import TimeoutException
 def find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_counter, logger, db):
 
     """
-
     :param searchString:
     :param n_comments:
     :param multiproducts:
@@ -21,13 +20,13 @@ def find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_count
     -searching the topic on the flipkart
     -storing all the comments to the mongodb atlas
     -making all logs about it
-
     """
 
     flipkart_url = "https://www.flipkart.com" + "/search?q=" + searchString + "&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
 
     logger.info("Start of new program " + searchString)
     logger.info("")
+
 
     collection = db[searchString]
 

@@ -2,20 +2,12 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS, cross_origin
 import logging
 import pymongo
-from urllib.parse import quote
+#from urllib.parse import quote
 import ssl
 
-# from selenium import webdriver
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.common.by import By
-# from selenium.common.exceptions import TimeoutException
-
-
 from vr_scrapper.find_data import find_data_on_fk
-from vr_scrapper.abc import find_data_on_fk_dummy
+#from vr_scrapper.abc import find_data_on_fk_dummy
 
-app = Flask(__name__)
 
 # settings for log file
 logger = logging.getLogger(__name__)
@@ -33,11 +25,31 @@ client = pymongo.MongoClient(url, ssl_cert_reqs=ssl.CERT_NONE)
 db = client["Scrapper_n_Sentiment"]
 
 
+app = Flask(__name__)
+
 
 @app.route('/', methods=['GET'])  # route to display the home page
 @cross_origin()   # we use this when we are deploying on server, as it helps to communicate to server in other region
 def homePage():
-    return render_template("index.html")#"train_model.html")#
+    return render_template("start.html")#"make_new_model.html")# "index.html")#
+
+
+@app.route('/fetch_n_store', methods=['POST', 'GET'])  # route to show the review comments in a web UI
+@cross_origin()
+def page11_fetch_n_store():
+    return render_template("fetch_n_store.html")
+
+@app.route('/make_new_model', methods=['POST', 'GET'])  # route to show the review comments in a web UI
+@cross_origin()
+def page12_make_new_model():
+    return render_template("make_new_model.html")
+
+
+@app.route('/test_model', methods=['POST', 'GET'])  # route to show the review comments in a web UI
+@cross_origin()
+def page13_test_model():
+    #return render_template("test_model.html")
+    pass
 
 
 @app.route('/review', methods=['POST', 'GET'])  # route to show the review comments in a web UI
@@ -52,6 +64,8 @@ def index():
             global n_comments
             global User_Id
             global Project_Id
+            global fetchNstore
+            global makeNewModel
 
             searchString = request.form['content'].replace(" ", "")
             searchString = searchString.lower()
@@ -67,8 +81,37 @@ def index():
                 multiproducts = 0
                 multiproducts_counter = 0
 
-            #find_data_on_fk_dummy(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
-            find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
+            if "fetch_n_store" in str(request.__dict__['environ']['HTTP_REFERER']):
+                fetchNstore  = 1
+                makeNewModel = 0
+            elif "make_new_model":
+                fetchNstore  = 0
+                makeNewModel = 1
+
+            # if search string is already available in mongodb
+            if searchString in db.list_collection_names():
+                # and if n_docs is sufficient
+                logger.info("collection is already present")
+                if db[searchString].count_documents(filter={}) >= n_comments:
+                    # do not scrap the web, just use saved data from mongodb
+                    logger.info("The data is already present on mongodb for requested query and is sufficient")
+                    print("data is already present.")
+                # and n_docs is not sufficient
+                else:
+                    # delete that collection and make new collection for same string
+                    db[searchString].drop()
+                    logger.info(f"collection {searchString} deleted as it had insufficient data.")
+                    find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
+            # if search string is not already available in mongodb
+            else:
+                #find_data_on_fk_dummy(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
+                find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
+
+            # this means that we not only have to store data on mongodb, but also gather it and pass it for model
+            if makeNewModel == 1:
+                # now, we have to make a directory and store the collected data at that location
+
+                pass
 
             return render_template('results.html', searchString=searchString)
 

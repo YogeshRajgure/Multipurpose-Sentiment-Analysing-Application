@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+
+{% block head %}
+
     <meta charset="UTF-8">
     <title>Main Page for the App</title>
     <style>
@@ -23,35 +24,36 @@
 
         .button3 {background-color: #800080;} /* Blue */
     </style>
-</head>
 
-<body>
+{% endblock %}
+
+{% block body %}
+
     <br>
     <br><br><br>
     <center>
     <div class="3_boxes" style="align: center">
 
-        <a href="fetch_n_store.html">
-            <button class="button button1">
+        <form method="POST" action="/fetch_n_store">
+            <button class="button button1" >
                 Fetch Data and Store
             </button>
-        </a>
+        </form>
 
-        <a href="train_model.html">
-            <button class="button button2">
+
+        <form method="POST" action="/make_new_model">
+            <button class="button button2" >
                 Make new Model
             </button>
-        </a>
+        </form>
 
-        <a href="test_model.html">
-            <button class="button button3">
+        <form method="POST" action="/test_model">
+            <button class="button button3" >
                 Test on Saved Model
             </button>
-        </a>
+        </form>
 
     </div>
     </center>
 
-</body>
-
-</html>
+{% endblock %}
