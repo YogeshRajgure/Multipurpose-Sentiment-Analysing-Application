@@ -7,6 +7,7 @@ import ssl
 
 from vr_scrapper.find_data import find_data_on_fk
 #from vr_scrapper.abc import find_data_on_fk_dummy
+from utils import utils
 
 
 # settings for log file
@@ -84,7 +85,8 @@ def index():
             if "fetch_n_store" in str(request.__dict__['environ']['HTTP_REFERER']):
                 fetchNstore  = 1
                 makeNewModel = 0
-            elif "make_new_model":
+            elif "make_new_model" in str(request.__dict__['environ']['HTTP_REFERER']):
+                print("making new model")
                 fetchNstore  = 0
                 makeNewModel = 1
 
@@ -96,6 +98,11 @@ def index():
                     # do not scrap the web, just use saved data from mongodb
                     logger.info("The data is already present on mongodb for requested query and is sufficient")
                     print("data is already present.")
+                    # but
+                    if makeNewModel == 1:
+                        path = utils.createDirectoryForUser(User_Id, Project_Id)
+                        utils.download_data_from_db(db[searchString], path, searchString)
+                        pass
                 # and n_docs is not sufficient
                 else:
                     # delete that collection and make new collection for same string

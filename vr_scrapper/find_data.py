@@ -42,11 +42,12 @@ def find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_count
         links_to_all = wd.find_elements_by_class_name("_2r_T1I")
 
     product_link_count = 0
-    a = links_to_all[product_link_count].click()
+    # a = links_to_all[product_link_count].click()
+    links_to_all[product_link_count].click()
 
     counter = 0
     all_comments = list()
-    comment_interfering_flag = 0
+    # comment_interfering_flag = 0
 
     while counter <= n_comments:
 
@@ -78,7 +79,9 @@ def find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_count
         # below code makes sure that webpage is loaded
         delay = 3  # seconds
         try:
-            myElem = WebDriverWait(wd, delay).until(EC.presence_of_element_located((By.CLASS_NAME, '_1LKTO3')))
+            # myElem = WebDriverWait(wd, delay).until(EC.presence_of_element_located((By.CLASS_NAME, '_1LKTO3')))
+            WebDriverWait(wd, delay).until(EC.presence_of_element_located((By.CLASS_NAME, '_1LKTO3')))
+
             logger.info("Comments page is ready")
             print("comments Page is ready!")
         except TimeoutException as e:
@@ -122,7 +125,8 @@ def find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_count
 
             # upload to database
             try:
-                x = collection.insert_many(all_comments)
+                # x = collection.insert_many(all_comments)
+                collection.insert_many(all_comments)
                 #print(all_comments)
             except Exception as e:
                 logger.exception(e)

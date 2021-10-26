@@ -134,5 +134,6 @@ app2.py
 .idea
 .idea/
 *.idea/
+training_data/
 chromedriver_win32.zip
 ML_prediction.ipynb
