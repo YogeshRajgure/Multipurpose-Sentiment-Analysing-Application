@@ -15,7 +15,7 @@ def createDirectoryForUser(userId, projectId):
     return path
 
 
-def download_data_from_db(collection, path, fileName):
+def download_data_from_db(collection, path, searchString):
     data = [i for i in collection.find({}, {'_id': 0,
                                             'ratings': 1,
                                             'comment': 1
@@ -25,7 +25,7 @@ def download_data_from_db(collection, path, fileName):
                 'projectId': 'fk_data',
                 'userId': 'frames'
                 }
-    path_ = os.path.join(path, fileName + "_train.json")
+    path_ = os.path.join(path, searchString + "_train.json")
     with open(path_, "w") as f:
         f.write(json.dumps(all_data, indent=4, sort_keys=True))
 
