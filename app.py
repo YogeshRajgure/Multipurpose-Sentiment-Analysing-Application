@@ -135,7 +135,14 @@ def index():
             # this means that we not only have to store data on mongodb, but also gather it and pass it for model
             if makeNewModel == 1:
                 # now, we have to make a directory and store the collected data at that location
-
+                try:
+                    path = utils.createDirectoryForUser(User_Id, Project_Id)
+                    data_file_name = utils.download_data_from_db(db[searchString], path, searchString)
+                    # probably try that, after this download, you can go to new page showing that your model is being trained.
+                    json_file_path = path + '/' + data_file_name
+                    model_score = new_client.trainObj.training_model(json_file_path, path, searchString)
+                except Exception as e:
+                    logger.log(e)
                 pass
 
             return render_template('results.html', searchString=searchString)

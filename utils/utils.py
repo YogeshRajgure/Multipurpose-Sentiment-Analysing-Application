@@ -9,9 +9,18 @@ import pandas as pd
 
 def createDirectoryForUser(userId, projectId):  # always creates directory under training data directory
     path = os.path.join("training_data", userId)  # .replace("\\","/")
-    os.makedirs(path, exist_ok=True)
+    try:
+        os.makedirs(path, exist_ok=True)
+    except:
+        if not os.path.isdir(path):
+            os.mkdir(path)
+
     path = os.path.join("training_data", userId, projectId)  # .replace("\\","/")
-    os.makedirs(path)
+    try:
+        os.makedirs(path)
+    except:
+        if not os.path.isdir(path):
+            os.mkdir(path)
 
     return path
 
