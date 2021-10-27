@@ -6,7 +6,8 @@ import string
 import en_core_web_sm
 import pandas as pd
 
-def createDirectoryForUser(userId, projectId):
+
+def createDirectoryForUser(userId, projectId):  # always creates directory under training data directory
     path = os.path.join("training_data", userId)  # .replace("\\","/")
     os.makedirs(path, exist_ok=True)
     path = os.path.join("training_data", userId, projectId)  # .replace("\\","/")
@@ -26,8 +27,12 @@ def download_data_from_db(collection, path, searchString):
                 'userId': 'frames'
                 }
     path_ = os.path.join(path, searchString + "_train.json")
+
     with open(path_, "w") as f:
         f.write(json.dumps(all_data, indent=4, sort_keys=True))
+
+    data_file_name = searchString + "_train.json"
+    return data_file_name
 
 
 def data_from_StopWords_File(filePath):
@@ -46,7 +51,7 @@ def data_preprocessing_train(list_of_data_dict, stopWords_file_path):
     nlp = en_core_web_sm.load()
     pattern = "@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+"
 
-    df = pd.DataFrame(columns=['target', 'text'])
+    # df = pd.DataFrame(columns=['target', 'text'])
 
     # our data is save as list of dictonaries
     for data in list_of_data_dict:
@@ -72,8 +77,8 @@ def data_preprocessing_predict(text_list, stopWords_file_path):
     stopWords = data_from_StopWords_File(stopWords_file_path)
     nlp = en_core_web_sm.load()  # preprocessing library spacy
     pattern = "@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+"
-
     clean_text = []
+
     for data in text_list:
         clean_data = []
         doc = nlp(data)

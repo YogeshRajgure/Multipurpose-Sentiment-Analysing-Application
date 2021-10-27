@@ -8,6 +8,8 @@ import ssl
 from vr_scrapper.find_data import find_data_on_fk
 #from vr_scrapper.abc import find_data_on_fk_dummy
 from utils import utils
+from trainApp.trainApp import TrainApi
+from predictApp.predictApp import PredictApi
 
 
 # settings for log file
@@ -27,6 +29,15 @@ db = client["Scrapper_n_Sentiment"]
 
 
 app = Flask(__name__)
+
+
+class ClientApi:
+
+    def __init__(self):
+        stopWords_filePath = 'data/stopwords.txt'
+        self.trainObj = TrainApi(stopWords_filePath)
+        self.predictObj = PredictApi(stopWords_filePath)
+
 
 
 @app.route('/', methods=['GET'])  # route to display the home page
@@ -100,15 +111,22 @@ def index():
                     print("data is already present.")
                     # but
                     if makeNewModel == 1:
-                        path = utils.createDirectoryForUser(User_Id, Project_Id)
-                        utils.download_data_from_db(db[searchString], path, searchString)
-                        pass
+                        try:
+                            path = utils.createDirectoryForUser(User_Id, Project_Id)
+                            data_file_name = utils.download_data_from_db(db[searchString], path, searchString)
+                            # probably try that, after this download, you can go to new page showing that your model is being trained.
+                            json_file_path = path + '/' + data_file_name
+                            model_score = new_client.trainObj.training_model(json_file_path, path, searchString)
+                        except Exception as e:
+                            logger.log(e)
                 # and n_docs is not sufficient
                 else:
+                    logger.info("But not enough data as it is required")
                     # delete that collection and make new collection for same string
                     db[searchString].drop()
                     logger.info(f"collection {searchString} deleted as it had insufficient data.")
                     find_data_on_fk(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
+
             # if search string is not already available in mongodb
             else:
                 #find_data_on_fk_dummy(searchString, n_comments, multiproducts, multiproducts_counter, logger, db)
@@ -175,5 +193,11 @@ def graph():
 
 
 if __name__ == "__main__":
-    #app.run(host='127.0.0.1', port=8001, debug=True)
-	app.run(debug=True)
+
+    new_client = ClientApi()
+    # host = '0.0.0.0'
+    # port = 5001
+    # httpd = simple_server.make_server(host, port, app)
+    # print("Serving on %s %d" % (host, port))
+    # httpd.serve_forever()
+    app.run(debug=True)
