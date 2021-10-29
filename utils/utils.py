@@ -6,6 +6,53 @@ import string
 import en_core_web_sm
 import pandas as pd
 
+def return_path_for_models(userId, projectId):
+    base_path = os.path.join("training_data", userId, projectId)
+    # here, we do not need to change the directory as we already changed it in checkForDirectory_and_models() function
+    print(os.getcwd())
+    os.chdir(base_path)
+
+    for dir_name in os.listdir():
+        if "model" in dir_name:
+            svm_model = os.path.join(base_path, dir_name)
+        if "tfidf" in dir_name:
+            tfidf_vect = os.path.join(base_path, dir_name)
+
+    for i in range(3): os.chdir("..")
+    return svm_model, tfidf_vect
+
+def checkForDirectory_and_models(userId, projectId ):
+    path = os.path.join("training_data", userId, projectId)
+    print("made path")
+    if os.path.isdir(path):
+        os.chdir(path)
+        print("changed dir")
+        if len(os.listdir()) >= 2 :
+            print("greater than 2")
+            check = 1
+            for dir_name in os.listdir():
+                if ("model" in dir_name):
+                    break
+            else:
+                print("model is not found in location")
+                for i in range(3):os.chdir("..")
+                return False
+
+            for dir_name in os.listdir():
+                if ("tfidf" in dir_name):
+                    break
+            else:
+                print("tfidf is not found in location")
+                for i in range(3): os.chdir("..")
+                return False
+            for i in range(3): os.chdir("..")
+            return True
+        else:
+            for i in range(3): os.chdir("..")
+            return False
+
+    else:
+        return False
 
 def createDirectoryForUser(userId, projectId):  # always creates directory under training data directory
     path = os.path.join("training_data", userId)  # .replace("\\","/")
@@ -45,11 +92,18 @@ def download_data_from_db(collection, path, searchString):
 
 
 def data_from_StopWords_File(filePath):
+    print(filePath)
     stopWordsList = list()
-    with open(filePath, 'r') as f:
-        lines = f.read().splitlines()
-        for line in lines:
-            stopWordsList.append(line)
+    try:
+        with open(filePath, 'r') as f:
+            lines = f.read().splitlines()
+    except:
+        filePath.replace("\\","/")
+        with open(filePath, 'r') as f:
+            lines = f.read().splitlines()
+
+    for line in lines:
+        stopWordsList.append(line)
 
     return stopWordsList
 

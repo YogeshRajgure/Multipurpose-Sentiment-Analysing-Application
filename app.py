@@ -1,12 +1,11 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, Response, jsonify
 from flask_cors import CORS, cross_origin
 import logging
 import pymongo
-#from urllib.parse import quote
 import ssl
+import os
 
 from vr_scrapper.find_data import find_data_on_fk
-#from vr_scrapper.abc import find_data_on_fk_dummy
 from utils import utils
 from trainApp.trainApp import TrainApi
 from predictApp.predictApp import PredictApi
@@ -34,7 +33,7 @@ app = Flask(__name__)
 class ClientApi:
 
     def __init__(self):
-        stopWords_filePath = 'data/stopwords.txt'
+        stopWords_filePath = 'data\\stopwords.txt'
         self.trainObj = TrainApi(stopWords_filePath)
         self.predictObj = PredictApi(stopWords_filePath)
 
@@ -61,7 +60,7 @@ def page12_make_new_model():
 @cross_origin()
 def page13_test_model():
     #return render_template("test_model.html")
-    pass
+    return render_template("predict_on_model.html")
 
 
 @app.route('/review', methods=['POST', 'GET'])  # route to show the review comments in a web UI
@@ -159,7 +158,35 @@ def index():
             logger.info(" ")
 
     else:
-        return render_template('index.html')
+        return render_template('start.html')
+
+
+
+@app.route('/predict', methods=['POST'])
+@cross_origin()
+def predict_on_model():
+    try:
+        User_Id = request.form['UserId']
+        Project_Id = request.form['ProjectId']
+        text = request.form['predict_text']
+        #text_ = list()
+        #text_.append(text)
+        print("h")
+        if utils.checkForDirectory_and_models(User_Id, Project_Id):
+            print("hi")
+            svm_model, tfidf_vect = utils.return_path_for_models(User_Id, Project_Id)
+            print("hii")
+            result = new_client.predictObj.execute_processing(text, svm_model, tfidf_vect)
+            pass
+        else:
+            logger.info("models not present")
+
+    except Exception as e:
+        logger.log(e)
+        return Response((str(e)))
+    return Response(result)
+
+
 
 
 

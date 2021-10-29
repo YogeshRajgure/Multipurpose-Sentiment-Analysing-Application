@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Search Page</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="content">
+    <form action="/" >
+        <input type="submit" value="Home">
+    </form>
+    <a href="start.html" >Home</a>
+    <h1 style="text-align: center">Search</h1>
+
+    <div class="form" style="align: center">
+        <form action="/predict" method="POST">
+            <center>
+            UserId : <input type="text" name="UserId" placeholder="UserId" id="UserId" >
+            ProjectId : <input type="text" name="ProjectId" placeholder="ProjectId" id="ProjectId">
+            <br>
+            Text to predict on:
+            <br>
+            <input type="text" name="predict_text" placeholder="predict_text" id="predict_text" size="100"  >
+            <br>
+            <input type="submit" value="    Predict    "> <!-- submit -->
+            </center>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
