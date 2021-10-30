@@ -190,42 +190,6 @@ def predict_on_model():
 
 
 
-
-@app.route('/visualization', methods=['POST', 'GET'])
-@cross_origin()
-def graph():
-
-    documentsWithTop50NoOfRatings = [i for i in db[searchString].find({}, {'product_name': 1,
-                                                                      '_id': 0,
-                                                                      'price_without_discount': 1,
-                                                                      'current_price': 1,
-                                                                      'product_rating': 1,
-                                                                      'total_no_of_ratings': 1
-                                                                     }
-                                                                 ).sort([("total_no_of_ratings", -1),
-                                                                        ("current_price", 1)
-                                                                        ]
-                                                                 ).limit(50)
-                                    ]  # now, data contains iterable object for all the project names
-
-    names_of_products = []  # [i['product_name'] for i in data]
-    real_price_values = []  # [i['price_without_discount'] for i in data]
-    current_price_values = []  # [i['current_price'] for i in data]
-    ratings = []  # [i['product_rating'] for i in data]
-    total_ratings = []
-    for i in documentsWithTop50NoOfRatings:
-        names_of_products.append(i['product_name'].split(')')[0]+')')
-        real_price_values.append(i['price_without_discount'])
-        current_price_values.append(i['current_price'])
-        ratings.append(i['product_rating'])
-        total_ratings.append(i['total_no_of_ratings'])
-
-    return render_template("chart.html", total_ratings=total_ratings, searchString=searchString, names_of_products=names_of_products, real_price_values=real_price_values, current_price_values=current_price_values, ratings=ratings)
-
-
-
-
-
 if __name__ == "__main__":
 
     new_client = ClientApi()
