@@ -84,6 +84,8 @@ def index():
             User_Id = request.form['UserId_r']
             Project_Id = request.form['ProjectId_r']
 
+            data_present = ""
+
             try:
                 multiproducts = request.form['multi_products']
                 multiproducts = int(1)
@@ -108,6 +110,7 @@ def index():
                     # do not scrap the web, just use saved data from mongodb
                     logger.info("The data is already present on mongodb for requested query and is sufficient")
                     print("data is already present.")
+                    data_present = "Data was Already present for this keyword"
                     # but
                     if makeNewModel == 1:
                         try:
@@ -144,7 +147,10 @@ def index():
                     logger.log(e)
                 pass
 
-            return render_template('results.html', searchString=searchString)
+            if makeNewModel ==1:
+                return render_template('start.html', make_new_model=1, searchString=searchString, project = Project_Id, user=User_Id, data = data_present)
+
+            return render_template('start.html', fetch_n_store=1, searchString=searchString, data=data_present)
 
         except Exception as e:
             logger.exception(e)
@@ -184,7 +190,7 @@ def predict_on_model():
     except Exception as e:
         logger.log(e)
         return Response((str(e)))
-    return Response(result)
+    return render_template('predict_on_model.html', result=result )
 
 
 

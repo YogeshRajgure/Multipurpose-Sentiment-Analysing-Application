@@ -4,35 +4,53 @@
 
     <meta charset="UTF-8">
     <title>Main Page for the App</title>
+    <link rel="stylesheet" href='/static/css/start.css' />
     <style>
         .button
         {
+          background-color: #4CAF50;
           border: none;
           color: white;
-          padding: 15px 32px;
+          padding: 100px 60px;
           text-align: center;
           text-decoration: none;
           display: inline-block;
-          font-size: 16px;
+          font-size: 30px;
           margin: 4px 2px;
           cursor: pointer;
-        }
+          border-radius: 60px;
+
+          margin:10px
+          }
 
         .button1 {background-color: #4CAF50;} /* Green */
 
         .button2 {background-color: #008CBA;} /* Blue */
 
         .button3 {background-color: #800080;} /* Blue */
+
+        .3_boxes{justify-content: center;
+                text-align: center;
+                display: flex;
+
+
+        }
+
+
+
     </style>
 
 {% endblock %}
 
 {% block body %}
 
+
     <br>
     <br><br><br>
-    <center>
-    <div class="3_boxes" style="align: center">
+
+    <div class="3_boxes" style="justify-content: center; text-align: center; display: flex; margin-top: 100px;" >
+
+
 
         <form method="POST" action="/fetch_n_store">
             <button class="button button1" >
@@ -54,6 +72,24 @@
         </form>
 
     </div>
-    </center>
+</div>
+
+<div style="text-align: center;">
+
+    {% if make_new_model == 1 %}
+        <h3>Made New Model For {{searchString}} at {{user}}/{{project}} </h3>
+    {% endif %}
+    {% if (make_new_model == 1) and (data != "") %}
+        <h4>{{data}}</h4>
+    {% endif %}
+
+    {% if fetch_n_store == 1 %}
+        <h3>Stored data for {{searchString}} on MongoDB</h3>
+    {% endif %}
+    {% if (fetch_n_store == 1) and (data != "") %}
+        <h4>{{data}}</h4>
+    {% endif %}
+
+</div>
 
 {% endblock %}

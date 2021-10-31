@@ -2,34 +2,45 @@
 
 {% block head %}
 
-<title>Search Page</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<title>Prediction Page</title>
+<link rel="stylesheet" href='/static/css/index.css' />
 
 {% endblock %}
 
 {% block body %}
-
-<div class="content">
-    <form action="/" >
+<form action="/" >
         <input type="submit" value="Home">
-    </form>
-    <a href="start.html" >Home</a>
-    <h1 style="text-align: center">Search</h1>
+</form>
 
-    <div class="form" style="align: center">
-        <form action="/predict" method="POST">
-            <center>
-            UserId : <input type="text" name="UserId" placeholder="UserId" id="UserId" >
-            ProjectId : <input type="text" name="ProjectId" placeholder="ProjectId" id="ProjectId">
-            <br>
-            Text to predict on:
-            <br>
-            <input type="text" name="predict_text" placeholder="predict_text" id="predict_text" size="100"  >
-            <br>
-            <input type="submit" value="    Predict    "> <!-- submit -->
-            </center>
-        </form>
-    </div>
+<div class="box">
+
+	<form action="/predict" method="POST">
+
+		<span class="text-center">Predict on Available Trained Model</span>
+
+        <div class="input-container">
+            <input type="text" required="" name="UserId" id="UserId" />
+            <label>UserId :</label>
+        </div>
+
+        <div class="input-container">
+            <input type="text" required="" name="ProjectId" id="ProjectId"/>
+            <label>ProjectId :</label>
+        </div>
+
+        <div class="input-container">
+            <input type="text" required="" name="predict_text" id="predict_text" size="150"/>
+            <label>Text to predict on:</label>
+        </div>
+
+        <input class="btn" type="submit" value="    Predict    "> <!-- submit -->
+
+    </form>
+
+    {% if result %}
+        <h4 style="color:White">Sentiment Score is : <h3 style="color:White">{{result}}</h3></h4>
+    {% endif %}
 </div>
 
 {% endblock %}
+
