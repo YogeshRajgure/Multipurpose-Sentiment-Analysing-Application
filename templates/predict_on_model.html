@@ -40,6 +40,12 @@
     {% if result %}
         <h4 style="color:White">Sentiment Score is : <h3 style="color:White">{{result}}</h3></h4>
     {% endif %}
+    {% if info %}
+        <h4 style="color:White">{{info}}</h4>
+    {% endif %}
+    {% if exception %}
+        <h4 style="color:White">{{exception}}</h4>
+    {% endif %}
 </div>
 
 {% endblock %}

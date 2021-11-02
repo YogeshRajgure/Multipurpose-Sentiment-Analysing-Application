@@ -4,6 +4,8 @@ import logging
 import pymongo
 import ssl
 import os
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
 
 from vr_scrapper.find_data import find_data_on_fk
 from utils import utils
@@ -61,6 +63,42 @@ def page12_make_new_model():
 def page13_test_model():
     #return render_template("test_model.html")
     return render_template("predict_on_model.html")
+
+
+@app.route('/upload', methods=['POST', 'GET'])  # route to show the review comments in a web UI
+@cross_origin()
+def uploaded_file():
+
+    if request.method == 'POST':
+
+        logger.info("uploading new model")
+        try:
+            print("eeeeeeeeeeeeeeeeeeeeee")
+            User_Id = request.form['UserId_l']
+            print("eeeeeeeeeeeeeeeeeeeeee")
+            Project_Id = request.form['ProjectId_l']
+            file_ = request.files['fileToUpload']
+
+            path_ = utils.createDirectoryForUser(User_Id, Project_Id)
+
+            os.chdir(path_)
+            file_.save(secure_filename(file_.filename))
+
+            json_file_path = os.path.join(path_, secure_filename(file_.filename))
+
+            print("uploaded successfully")
+
+            for i in range(3): os.chdir("..")
+            print(os.getcwd())
+
+            model_score = new_client.trainObj.training_model(json_file_path, path_, file_.filename)
+
+            return render_template('start.html', make_new_model=1, searchString=searchString, project=Project_Id, user=User_Id, data="Data was uploaded from file")
+
+        except Exception as e:
+            logger.exception(e)
+
+
 
 
 @app.route('/review', methods=['POST', 'GET'])  # route to show the review comments in a web UI
@@ -177,19 +215,17 @@ def predict_on_model():
         text = request.form['predict_text']
         #text_ = list()
         #text_.append(text)
-        print("h")
         if utils.checkForDirectory_and_models(User_Id, Project_Id):
-            print("hi")
             svm_model, tfidf_vect = utils.return_path_for_models(User_Id, Project_Id)
-            print("hii")
             result = new_client.predictObj.execute_processing(text, svm_model, tfidf_vect)
-            pass
         else:
             logger.info("models not present")
+            return render_template('predict_on_model.html', info="models not present")
 
     except Exception as e:
-        logger.log(e)
-        return Response((str(e)))
+        logger.exception(e)
+        return render_template('predict_on_model.html', exception= (str(e)))
+    print('Everything is fine')
     return render_template('predict_on_model.html', result=result )
 
 

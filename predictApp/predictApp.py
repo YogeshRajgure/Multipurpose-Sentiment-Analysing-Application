@@ -18,13 +18,15 @@ class PredictApi:
         df = pd.DataFrame([text], columns=['text'])
         print(df['text'])
         df['text'] = data_preprocessing_predict(df['text'], self.stopWords_file_path)
+        df['text'] = [" ".join(value) for value in df['text'].values]
+        print(df['text'])
         # loading models
         with open(vector_path, 'rb') as f:
             TfidfVect = pickle.load(f)
         with open(model_path, 'rb') as f:
             svm_model = pickle.load(f)
 
-        pred_vect = TfidfVect.transform(df['text'][0])
+        pred_vect = TfidfVect.transform(df['text'])
         prediction = svm_model.predict(pred_vect)
         prediction_probability = svm_model.predict_proba(pred_vect)
 

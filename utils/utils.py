@@ -141,8 +141,9 @@ def data_preprocessing_predict(text_list, stopWords_file_path):
     nlp = en_core_web_sm.load()  # preprocessing library spacy
     pattern = "@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+"
     clean_text = []
-
+    print("text_list : ",text_list)
     for data in text_list:
+        print(data)
         clean_data = []
         doc = nlp(data)
 
@@ -152,6 +153,7 @@ def data_preprocessing_predict(text_list, stopWords_file_path):
                 if clean_token not in stopWords:
                     clean_data.append(clean_token)
         clean_text.append(clean_data)
+    print("clean_text : ", clean_text)
 
     return clean_text
 
