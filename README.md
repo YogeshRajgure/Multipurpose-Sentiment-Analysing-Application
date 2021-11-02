@@ -2,9 +2,7 @@
 
 ## In Action
 
-[Image source](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png)
-
-![](https://upload.wikimedia.org/wikipedia/commons/2/27/MnistExamples.png)
+![](static/video/demo.gif)
 
 ## Project Description
 
